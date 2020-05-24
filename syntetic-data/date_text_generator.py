@@ -40,11 +40,39 @@ class DateTextGenerator():
                 self._text_gen(day,month,year)
             )
 
+        for sample in self.date_range:
+            day,month,year = sample.split('/')
 
-        dataset = pd.DataFrame(list(zip(X,self.date_range)),columns=['Entrada','Canônico'])
+            X.append(
+                self._dot_as_sep(day,month,year)
+            )
+
+        for sample in self.date_range:
+            day,month,year = sample.split('/')
+
+            X.append(
+                self._all_extensive_numbers(day,month,year)
+            )
+
+        dataset = pd.DataFrame(list(zip(X,3*self.date_range)),columns=['Entrada','Canônico'])
 
         return dataset
 
+
+    @staticmethod
+    def _all_extensive_numbers(day,month,year):
+
+        input_day = num2words(int(day),lang='pt_BR')
+        input_month = num2words(int(month),lang='pt_BR')
+        input_year = num2words(int(year),lang='pt_BR')
+
+        return f'{input_day} do {input_month} de {input_year}'
+
+
+
+    @staticmethod
+    def _dot_as_sep(day,month,year):
+        return f'{day}.{month}.{year}'
 
     @staticmethod
     def _text_gen(day,month,year):
@@ -78,3 +106,7 @@ class DateTextGenerator():
             dates.append(f'{dia}/{mes}/{ano}')
 
         return dates
+
+a = DateTextGenerator(start_date='01/01/1900',end_date='31/12/2020')
+
+print(a.generate_date_dataset())
