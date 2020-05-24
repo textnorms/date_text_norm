@@ -56,6 +56,16 @@ class DateTextGenerator():
 
         return dataset
 
+    def generate_demo(self,date='01/01/2020'):
+        print(f'Gerando demostração dos formatos de datas geradas para a canônica: {date}')
+
+        for method_id,date_text_gen_method in self.text_gen_methods.items():
+        
+            day,month, year = date.split('/')
+            print(f'Método: {method_id} --- {date_text_gen_method(day,month,year)}')
+            print(50*'--')
+
+
 
     @staticmethod
     def generate_date_range (start_date,end_date,step=1):
