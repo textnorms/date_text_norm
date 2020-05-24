@@ -2,7 +2,7 @@ from num2words import num2words
 from datetime import datetime
 from datetime import timedelta
 import pandas as pd
-from date_text_formats import date_formats_dict
+from .date_text_formats import date_formats_dict
 
 class DateTextGenerator():
 
@@ -79,7 +79,3 @@ class DateTextGenerator():
             dates.append(f'{dia}/{mes}/{ano}')
 
         return dates
-
-a = DateTextGenerator(start_date='01/01/1900',end_date='31/12/2020')
-
-print(a.generate_date_dataset())
