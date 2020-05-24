@@ -1,8 +1,8 @@
 from num2words import num2words
-from date_dicts import extensive_months_dict
 from datetime import datetime
 from datetime import timedelta
 import pandas as pd
+from date_text_formats import date_formats_dict
 
 class DateTextGenerator():
 
@@ -21,67 +21,40 @@ class DateTextGenerator():
                 .
                 .
     '''
-    def __init__(self,start_date='01/01/0001',end_date='31/12/2999'):
+    def __init__(self,start_date='01/01/0001',
+        end_date='31/12/2999',
+        text_gen_methods=date_formats_dict):
 
         self.start_date = datetime.strptime(start_date, "%d/%m/%Y")
         self.end_date = datetime.strptime(end_date, "%d/%m/%Y")
 
         self.date_range = self.generate_date_range(self.start_date,self.end_date)
 
+        self.text_gen_methods = text_gen_methods
 
     def generate_date_dataset(self):
 
         X = []
+        ids = []
 
-        for sample in self.date_range:
-            day,month,year = sample.split('/')
+        for method_id,date_text_gen_method in self.text_gen_methods.items():
 
-            X.append(
-                self._text_gen(day,month,year)
-            )
+            for sample in self.date_range:
+                day,month,year = sample.split('/')
+                
+                ids.append(
+                    method_id
+                )
 
-        for sample in self.date_range:
-            day,month,year = sample.split('/')
+                X.append(
+                    date_text_gen_method(day,month,year)
+                )
 
-            X.append(
-                self._dot_as_sep(day,month,year)
-            )
-
-        for sample in self.date_range:
-            day,month,year = sample.split('/')
-
-            X.append(
-                self._all_extensive_numbers(day,month,year)
-            )
-
-        dataset = pd.DataFrame(list(zip(X,3*self.date_range)),columns=['Entrada','Canônico'])
+        target_reptitions = len(self.text_gen_methods.keys())
+        dataset = pd.DataFrame(list(zip(ids,X,target_reptitions*self.date_range)),
+            columns=['Tipo padrão','Entrada','Canônico'])
 
         return dataset
-
-
-    @staticmethod
-    def _all_extensive_numbers(day,month,year):
-
-        input_day = num2words(int(day),lang='pt_BR')
-        input_month = num2words(int(month),lang='pt_BR')
-        input_year = num2words(int(year),lang='pt_BR')
-
-        return f'{input_day} do {input_month} de {input_year}'
-
-
-
-    @staticmethod
-    def _dot_as_sep(day,month,year):
-        return f'{day}.{month}.{year}'
-
-    @staticmethod
-    def _text_gen(day,month,year):
-
-        input_day = num2words(int(day),lang='pt_BR')
-        input_month = extensive_months_dict[month]
-        input_year = num2words(int(year),lang='pt_BR')
-
-        return f'{input_day} de {input_month} de {input_year}'
 
 
     @staticmethod

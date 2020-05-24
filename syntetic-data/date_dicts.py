@@ -1,7 +1,6 @@
 '''
     Este arquivo contêm dicionários auxiliares para a construção
-    de datas por extenso em PT_BR. 
-
+    de datas por extenso em PT_BR. Em especial meses.
 '''
 
 '''
@@ -20,4 +19,23 @@ extensive_months_dict = {
     '10': 'outubro',
     '11': 'novembro',
     '12': 'dezembro'
+}
+
+'''
+    Meses escritos por extenso abreviados
+    para o PT_BR.
+'''
+shortened_months_dict = {
+    '01': 'jan',
+    '02': 'fev',
+    '03': 'mar',
+    '04': 'abr',
+    '05': 'mai',
+    '06': 'jun',
+    '07': 'jul',
+    '08': 'ago',
+    '09': 'set',
+    '10': 'out',
+    '11': 'nov',
+    '12': 'dez'
 }
