@@ -46,11 +46,15 @@ shortened_months_dict = {
     semelhantes podem ser trocadas por números similares ou letras
     que possuem formato parecido podem ser trocadas entre-si.
 '''
-ocr_error_dict = {
+lookalike_chars = {
     'o':'0',
     '0':'o',
     'c':'ç',
     'ç':'c',
     'l':'i',
-    'i':'l'
+    'i':'l',
+    'n':'m',
+    'm':'n',
+    'u':'v',
+    'v':'u'
 }
