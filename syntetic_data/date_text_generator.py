@@ -27,6 +27,7 @@ class DateTextGenerator():
     def __init__(self,start_date='01/01/0001',
         end_date='31/12/2999',
         text_noise_rate=0.0,
+        noise_occurences_per_sample = 2,
         text_gen_methods=date_formats_dict,
         text_noise_methods=text_noise_dict):
 
@@ -39,6 +40,8 @@ class DateTextGenerator():
 
         self.text_error_rate = text_noise_rate
         self.text_noise_methods = text_noise_methods
+
+        self.noise_occurences_per_sample = noise_occurences_per_sample
 
     def generate_date_dataset(self):
 
@@ -99,7 +102,7 @@ class DateTextGenerator():
 
         noise_func = self.text_noise_methods[noise_type]
 
-        return noise_func(input_text,2),noise_type
+        return noise_func(input_text,self.noise_occurences_per_sample),noise_type
 
     @staticmethod
     def generate_date_range (start_date,end_date,step=1):

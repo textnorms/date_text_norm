@@ -53,11 +53,21 @@ def lookalike_replace(input_text,K):
         except:
             continue
 
+        # Removing the just used key 
         locations.remove(location_to_replace)
+
+        # Obtaining the new char from char2replpace dict
         new_char = lookalike_chars[char2replace]
 
+
+        if len(locations) < 1:
+            # Removing key if has no more locations
+            replace_candidates.pop(char2replace,None)
+
+        # Inserting new char to target string
         input_text_as_list[location_to_replace] = new_char
-            
+        
+        # Counter incrementing
         K_counter += 1
     
     return "".join(input_text_as_list)
