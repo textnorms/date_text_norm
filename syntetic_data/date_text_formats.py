@@ -7,10 +7,8 @@
 '''
 
 from num2words import num2words
-from .date_dicts import extensive_months_dict
-from .date_dicts import shortened_months_dict
-
-
+from .aux_dicts import extensive_months_dict
+from .aux_dicts import shortened_months_dict
 
 def all_extensive_numbers(day,month,year):
     '''

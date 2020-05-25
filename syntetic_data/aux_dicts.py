@@ -39,3 +39,18 @@ shortened_months_dict = {
     '11': 'nov',
     '12': 'dez'
 }
+
+
+'''
+    Dicionário para simular erros de OCR, dde modo que letras
+    semelhantes podem ser trocadas por números similares ou letras
+    que possuem formato parecido podem ser trocadas entre-si.
+'''
+ocr_error_dict = {
+    'o':'0',
+    '0':'o',
+    'c':'ç',
+    'ç':'c',
+    'l':'i',
+    'i':'l'
+}
