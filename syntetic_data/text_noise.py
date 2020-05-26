@@ -73,6 +73,31 @@ def lookalike_replace(input_text,K):
     return "".join(input_text_as_list)
 
 
+def unexpected_space_noise(input_text,K):
+    '''
+        Given an input text, k random spaces will
+        be inserted between non space chars, creating
+        noisy texts with random splitting.
+    '''
+    # Initializinng counter and creating aux variable
+    K_count = 0
+    new_text = input_text
+    
+    while(K_count<K):
+        # Obtaining the split point for the string
+        split_point = sample(range(len(new_text)),1)[0]
+
+        # Skipping operation the if value is a ' ' or is the beggining or the end of seq
+        if new_text[split_point] == ' ' or split_point==0 or split_point == len(text_noise_dict):
+            
+            continue
+        
+        # Spliting list to insert noise data
+        new_text = new_text[:split_point] + ' ' + new_text[split_point:]
+        
+        K_count+=1
+
+    return new_text
 
 '''
     This dict exports all the implemented noise
@@ -80,5 +105,6 @@ def lookalike_replace(input_text,K):
     further usage on the main class
 '''
 text_noise_dict = {
-    'lookalike_replace':lookalike_replace
+    'lookalike_replace':lookalike_replace,
+    'unexpected_space_noise':unexpected_space_noise
 }
