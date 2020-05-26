@@ -46,38 +46,38 @@ class DateTextGenerator():
     def generate_date_dataset(self):
 
         X = []
-        ids = []
+        method_ids = []
         noise_types = [] # N/A if has no noise, or the keys from text_noise_implementations
 
-        for method_id,date_text_gen_method in self.text_gen_methods.items():
+        for sample in self.date_range:
+            
+            # Sampling method and its ids
+            method_id,date_text_gen_method = self.sample_from_dict(self.text_gen_methods)[0]
 
-            for sample in self.date_range:
-                day,month,year = sample.split('/')
-                
-                ids.append(
-                    method_id
-                )
+            day,month,year = sample.split('/')
+            
+            method_ids.append(
+                method_id
+            )
 
-                text_sample = date_text_gen_method(day,month,year)
+            text_sample = date_text_gen_method(day,month,year)
 
-                
-                noise_type = 'N/A'
+            noise_type = 'N/A'
 
-                if random() < self.text_error_rate:
-                    # Applying noise
-                    text_sample,noise_type = self._apply_noise(text_sample)
-                
-                noise_types.append(
-                    noise_type    
-                )
+            if random() < self.text_error_rate:
+                # Applying noise
+                text_sample,noise_type = self._apply_noise(text_sample)
+            
+            noise_types.append(
+                noise_type    
+            )
 
-                X.append(
-                    text_sample
-                )
+            X.append(
+                text_sample
+            )
 
-        target_reptitions = len(self.text_gen_methods.keys())
-        dataset = pd.DataFrame(list(zip(ids,noise_types,X,target_reptitions*self.date_range)),
-            columns=['Tipo padrão','Ruído','Entrada','Canônico'])
+        dataset = pd.DataFrame(list(zip(method_ids,noise_types,X,self.date_range)),
+            columns=['Input Pattern','Noise Type','Input','Target'])
 
         return dataset
 
@@ -103,6 +103,22 @@ class DateTextGenerator():
         noise_func = self.text_noise_methods[noise_type]
 
         return noise_func(input_text,self.noise_occurences_per_sample),noise_type
+
+    @staticmethod
+    def sample_from_dict(dict_to_sample,n_samples=1):
+        '''
+            This method implements a form of sampling n_samples from
+            a dict. This is code was inspired in the implementation
+            described in:
+            https://stackoverflow.com/questions/10125568/how-to-randomly-choose-multiple-keys-and-its-value-in-a-dictionary-python
+        '''
+
+        # Sampling n_samples keys
+        keys_and_values = sample(dict_to_sample.items(), n_samples)
+        
+        # Returns the values and the keys corresponding
+        # each sampled value
+        return keys_and_values
 
     @staticmethod
     def generate_date_range (start_date,end_date,step=1):
