@@ -15,7 +15,7 @@ def findAllOccurrences(s, ch):
     '''
     return [i for i, letter in enumerate(s) if letter == ch]
 
-def lookalike_replace(input_text,K):
+def lookalike_replace_noise(input_text,K):
     '''
         Essa função troca K caracteres de uma string por caracteres que
         podem ser semelhantes dadas algumas fontes específicas.
@@ -99,12 +99,30 @@ def unexpected_space_noise(input_text,K):
 
     return new_text
 
+
+def remove_char_noise(input_text,K):
+    '''
+        This function removes K random chars from the text input.
+    '''
+    # Converting the input to a list to
+    # allow removing chars
+    input_text_as_list = list(input_text)
+    
+    for k in range(K):
+        index_to_remove = sample(range(len(input_text_as_list)),1)[0]
+        
+        del input_text_as_list[index_to_remove]
+
+    return "".join(input_text_as_list)
+
+
 '''
     This dict exports all the implemented noise
     functions implemented in this file for
     further usage on the main class
 '''
 text_noise_dict = {
-    'lookalike_replace':lookalike_replace,
-    'unexpected_space_noise':unexpected_space_noise
+    'lookalike_replace_noise':lookalike_replace_noise,
+    'unexpected_space_noise':unexpected_space_noise,
+    'remove_char_noise':remove_char_noise
 }
