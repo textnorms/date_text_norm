@@ -1,2 +1,5 @@
 .vscode/*
 *__pycache__*
+
+# Do not track CSV data
+*.csv
