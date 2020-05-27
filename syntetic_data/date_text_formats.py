@@ -122,7 +122,7 @@ def format6(day,month,year):
     '''
 
     input_day = day
-    input_month = extensive_months_dict[month].capitalize()
+    input_month = extensive_months_dict[month]
     input_year = num2words(int(year),lang='pt_BR')
 
     return f'{input_day} de {input_month} de {input_year}'
@@ -149,7 +149,7 @@ def format8(day,month,year):
     input_month = month
     input_year = year
 
-    return f'{input_day} de {input_month} - {input_year}'
+    return f'{input_day} - {input_month} - {input_year}'
 
 
 def format9(day,month,year):
@@ -215,14 +215,14 @@ def format13(day,month,year):
 def format14(day,month,year):
     '''
         Date format 14 described as:
-        "28 / Abril / 2005" for the date 28/04/2005
+        "28º / Abril / 2005" for the date 28/04/2005
     '''
 
     input_day = day
     input_month = extensive_months_dict[month].capitalize()
     input_year = year
 
-    return f'{input_day} / {input_month} / {input_year}'
+    return f'{input_day}º / {input_month} / {input_year}'
 
 def format15(day,month,year):
     '''
@@ -330,7 +330,7 @@ def format23(day,month,year):
     '''
 
     input_day = day
-    input_month = int(month)
+    input_month = month
     input_year = year[-2:]
 
     return f'{input_day}-{input_month}-{input_year}'
@@ -342,7 +342,7 @@ def format24(day,month,year):
     '''
 
     input_day = day
-    input_month = int(month)
+    input_month = month
     input_year = year[-2:]
 
     return f'{input_day} - {input_month} - {input_year}'
@@ -406,7 +406,7 @@ def format29(day,month,year):
     input_month = shortened_months_dict[month]
     input_year = year[-2:]
 
-    return f'{input_day} - {input_month} - {input_year}'
+    return f'{input_day}-{input_month}-{input_year}'
 
 def format30(day,month,year):
     '''
