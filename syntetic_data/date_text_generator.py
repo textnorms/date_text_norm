@@ -82,14 +82,25 @@ class DateTextGenerator():
         return dataset
 
     def generate_demo(self,date='01/01/2020'):
-        print(f'Gerando demostração dos formatos de datas geradas para a canônica: {date}')
+        '''
+            Generates a demo for all the text forms
+            contained in the model for a given date.
+        '''        
+        methods = []
+        generated_texts = []
+
+        day,month, year = date.split('/')
 
         for method_id,date_text_gen_method in self.text_gen_methods.items():
         
-            day,month, year = date.split('/')
-            print(f'Método: {method_id} --- {date_text_gen_method(day,month,year)}')
-            print(50*'-')
+            methods.append(method_id)
+            generated_texts.append(date_text_gen_method(day,month,year))
 
+
+        dataset = pd.DataFrame(list(zip(methods,generated_texts,[date]*len(self.text_gen_methods))),
+            columns=['Input Pattern','Generated Text','Origin Sample'])
+
+        return dataset
 
     def _apply_noise(self,input_text):
         '''
