@@ -1,45 +1,44 @@
 '''
     Este arquivo contêm dicionários auxiliares para a construção
-    de datas por extenso em PT_BR. Em especial meses.
+    de datas por extenso em EN. Em especial meses.
 '''
 
 '''
     Meses escritos por extenso
 '''
 extensive_months_dict = {
-    '01': 'janeiro',
-    '02': 'fevereiro',
-    '03': 'março',
-    '04': 'abril',
-    '05': 'maio',
-    '06': 'junho',
-    '07': 'julho',
-    '08': 'agosto',
-    '09': 'setembro',
-    '10': 'outubro',
-    '11': 'novembro',
-    '12': 'dezembro'
+    '01': 'january',
+    '02': 'february',
+    '03': 'march',
+    '04': 'april',
+    '05': 'may',
+    '06': 'june',
+    '07': 'july',
+    '08': 'august',
+    '09': 'september',
+    '10': 'october',
+    '11': 'november',
+    '12': 'december'
 }
 
 '''
     Meses escritos por extenso abreviados
-    para o PT_BR.
+    para EN.
 '''
 shortened_months_dict = {
     '01': 'jan',
-    '02': 'fev',
+    '02': 'feb',
     '03': 'mar',
-    '04': 'abr',
-    '05': 'mai',
+    '04': 'apr',
+    '05': 'may',
     '06': 'jun',
     '07': 'jul',
-    '08': 'ago',
-    '09': 'set',
-    '10': 'out',
+    '08': 'aug',
+    '09': 'sep',
+    '10': 'oct',
     '11': 'nov',
-    '12': 'dez'
+    '12': 'dec'
 }
-
 
 '''
     Dicionário para simular erros de OCR, dde modo que letras
