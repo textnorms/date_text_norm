@@ -3,6 +3,7 @@ from datetime import datetime
 from datetime import timedelta
 import pandas as pd
 from random import random
+from random import randint
 from random import sample
 from .text_noise import text_noise_dict
 from .date_text_formats import date_formats_dict
@@ -27,7 +28,8 @@ class DateTextGenerator():
     def __init__(self,start_date='01/01/0001',
         end_date='31/12/2999',
         text_noise_rate=0.0,
-        noise_occurences_per_sample = 2,
+        max_noise_types_per_sample=3,
+        max_noise_occurences_per_sample = 2,
         text_gen_methods=date_formats_dict,
         text_noise_methods=text_noise_dict):
 
@@ -41,7 +43,8 @@ class DateTextGenerator():
         self.text_error_rate = text_noise_rate
         self.text_noise_methods = text_noise_methods
 
-        self.noise_occurences_per_sample = noise_occurences_per_sample
+        self.max_noise_occurences_per_sample = max_noise_occurences_per_sample
+        self.max_noise_types_per_sample = max_noise_types_per_sample
 
     def generate_date_dataset(self):
 
@@ -57,14 +60,14 @@ class DateTextGenerator():
             day,month,year = sample.split('/')
             
             method_ids.append(
-                method_id
+                int(method_id)
             )
 
             text_sample = date_text_gen_method(day,month,year)
 
             noise_type = 'N/A'
 
-            if random() < self.text_error_rate:
+            if random.random() < self.text_error_rate:
                 # Applying noise
                 text_sample,noise_type = self._apply_noise(text_sample)
             
@@ -108,12 +111,29 @@ class DateTextGenerator():
             input_text. This function returns input_text
             with noise and the noise type applied.
         '''
+        
+        # Introducing some randomness to the proccess of selecting
+        # the number of samples
+        noise_types = randint(1,self.max_noise_types_per_sample)
+        
+        # This list will keep track of the noises applied to 
+        # each sample and will be used to included to the final
+        # dataframe 
+        applied_noises = []
 
-        noise_type = sample(list(self.text_noise_methods.keys()),1)[0]
+        for noise_type in sample(list(self.text_noise_methods.keys()),noise_types):
+            noise_func = self.text_noise_methods[noise_type]
+            
+            # Defining the number of occurrences per sample
+            noise_occurrences = randint(1,self.max_noise_occurences_per_sample)
 
-        noise_func = self.text_noise_methods[noise_type]
+            # Applying noise to multi samples
+            input_text  = noise_func(input_text,noise_occurrences)
 
-        return noise_func(input_text,self.noise_occurences_per_sample),noise_type
+            applied_noises.append(noise_type)
+
+
+        return input_text,applied_noises
 
     @staticmethod
     def sample_from_dict(dict_to_sample,n_samples=1):
