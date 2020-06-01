@@ -67,7 +67,7 @@ class DateTextGenerator():
 
             noise_type = 'N/A'
 
-            if random.random() < self.text_error_rate:
+            if random() < self.text_error_rate:
                 # Applying noise
                 text_sample,noise_type = self._apply_noise(text_sample)
             
