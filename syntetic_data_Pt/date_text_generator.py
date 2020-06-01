@@ -60,7 +60,7 @@ class DateTextGenerator():
             day,month,year = sample.split('/')
             
             method_ids.append(
-                method_id
+                int(method_id)
             )
 
             text_sample = date_text_gen_method(day,month,year)
