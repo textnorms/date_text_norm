@@ -6,10 +6,13 @@ from random import random
 from random import randint
 from random import sample
 from .text_noise import text_noise_dict
-from .date_text_formats import date_formats_dict
+from .lang_dicts import absolute_date_formats_dict_collection
+from .lang_dicts import incomplete_mm_yyyy_date_formats_dict_collection
+from .lang_dicts import incomplete_dd_mm_date_formats_dict_collection
+
 from .aux_functions import combinations
-from .mm_yyyy_text_formats import mm_yyyy_date_formats_dict
-from .dd_mm_text_formats import dd_mm_date_formats_dict
+# from .mm_yyyy_text_formats import mm_yyyy_date_formats_dict
+# from .dd_mm_text_formats import dd_mm_date_formats_dict
 
 class DateTextGenerator():
 
@@ -33,19 +36,17 @@ class DateTextGenerator():
         text_noise_rate=0.0,
         max_noise_types_per_sample=3,
         max_noise_occurences_per_sample = 2,
-        text_gen_methods=date_formats_dict,
         text_noise_methods=text_noise_dict,
-        mm_yyyy_text_gen_methods=mm_yyyy_date_formats_dict,
-        dd_mm_text_gen_methods=dd_mm_date_formats_dict):
+        language='en'):
 
         self.start_date = datetime.strptime(start_date, "%d/%m/%Y")
         self.end_date = datetime.strptime(end_date, "%d/%m/%Y")
 
         self.date_range = self.generate_date_range(self.start_date,self.end_date)
 
-        self.text_gen_methods = text_gen_methods
-        self.mm_yyyy_date_formats_dict = mm_yyyy_date_formats_dict
-        self.dd_mm_date_formats_dict = dd_mm_date_formats_dict
+        self.absolute_date_text_gen_methods = absolute_date_formats_dict_collection[language]
+        self.incomplete_mm_yyyy_date_formats_dict = incomplete_mm_yyyy_date_formats_dict_collection[language]
+        self.incomplete_dd_mm_date_formats_dict = incomplete_dd_mm_date_formats_dict_collection[language]
 
         self.text_error_rate = text_noise_rate
         self.text_noise_methods = text_noise_methods
@@ -92,7 +93,7 @@ class DateTextGenerator():
         for sample in date_range:
             
             # Sampling method and its ids
-            method_id,date_text_gen_method = self.sample_from_dict(self.text_gen_methods)[0]
+            method_id,date_text_gen_method = self.sample_from_dict(self.absolute_date_text_gen_methods)[0]
 
             day,month,year = sample.split('/')
             
@@ -135,7 +136,7 @@ class DateTextGenerator():
         for sample in date_range:
             
             # Sampling method and its ids
-            for method_id,date_text_gen_method in self.sample_from_dict(self.dd_mm_date_formats_dict,2):
+            for method_id,date_text_gen_method in self.sample_from_dict(self.incomplete_dd_mm_date_formats_dict,2):
 
                 month,year = sample.split('/')
                 
@@ -182,7 +183,7 @@ class DateTextGenerator():
         for sample in date_range:
             
             # Sampling method and its ids
-            method_id,date_text_gen_method = self.sample_from_dict(self.mm_yyyy_date_formats_dict,3)[0]
+            method_id,date_text_gen_method = self.sample_from_dict(self.incomplete_mm_yyyy_date_formats_dict,3)[0]
 
             month,year = sample.split('/')
             
@@ -221,13 +222,13 @@ class DateTextGenerator():
 
         day,month, year = date.split('/')
 
-        for method_id,date_text_gen_method in self.text_gen_methods.items():
+        for method_id,date_text_gen_method in self.absolute_date_text_gen_methods.items():
         
             methods.append(method_id)
             generated_texts.append(date_text_gen_method(day,month,year))
 
 
-        dataset = pd.DataFrame(list(zip(methods,generated_texts,[date]*len(self.text_gen_methods))),
+        dataset = pd.DataFrame(list(zip(methods,generated_texts,[date]*len(self.absolute_date_text_gen_methods))),
             columns=['Input Pattern','Generated Text','Origin Sample'])
 
         return dataset
