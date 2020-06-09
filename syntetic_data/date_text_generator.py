@@ -1,52 +1,77 @@
+'''
+    This file implements a date text generation
+    sample for all the classes
+    the implementations for each sample
+'''
+
+'''
+    Importing num2words module:
+    https://github.com/savoirfairelinux/num2words
+'''
 from num2words import num2words
+
+
+'''
+    Importing dependencies from datetime module
+'''
 from datetime import datetime
 from datetime import timedelta
+
+'''
+    Importing pandas module:
+    https://github.com/pandas-dev/pandas
+'''
 import pandas as pd
+
+'''
+    Importing random dependencies
+'''
 from random import random
 from random import randint
 from random import sample
+
+'''
+    Importing dependencies from Collections
+'''
+from collections import OrderedDict
+
+'''
+    Importing authorial modules, further description about
+    them can be found on their implementations.
+'''
 from .text_noise import text_noise_dict
 from .lang_dicts import absolute_date_formats_dict_collection
 from .lang_dicts import incomplete_mm_yyyy_date_formats_dict_collection
 from .lang_dicts import incomplete_dd_mm_date_formats_dict_collection
-
-from .aux_functions import combinations
-# from .mm_yyyy_text_formats import mm_yyyy_date_formats_dict
-# from .dd_mm_text_formats import dd_mm_date_formats_dict
+from .aux_dicts_and_functions import combinations
+from .aux_dicts_and_functions import occurences_per_sample_dict
 
 class DateTextGenerator():
-
     '''
-    Essa classe implementa um gerador de texto sintético
-    que usa como entrada datas no formato canônico e produz
-    amostras em formatos textuais não canônicos. 
-    E.g.:
-        - Entrada: 01/05/2020
-        - Saídas possíveis:
-            - 01 de maio de 2020;
-            - primeiro de maior de 2020;
-            - primeiro de maio de dois mil e vinte;
-            - primeiro do 05 de 2020;
-                .
-                .
-                .
+        This class implements date-text generation for
+        a period defined by start_date and end_date.
+        You can specify noise rate, date text formats per sample
+        and language.
     '''
     def __init__(self,start_date='01/01/0001',
         end_date='31/12/2999',
         text_noise_rate=0.0,
         max_noise_types_per_sample=3,
         max_noise_occurences_per_sample = 2,
+        occurences_per_sample_dict=occurences_per_sample_dict,
         text_noise_methods=text_noise_dict,
         language='en'):
 
         self.start_date = datetime.strptime(start_date, "%d/%m/%Y")
         self.end_date = datetime.strptime(end_date, "%d/%m/%Y")
-
         self.date_range = self.generate_date_range(self.start_date,self.end_date)
 
-        self.absolute_date_text_gen_methods = absolute_date_formats_dict_collection[language]
-        self.incomplete_mm_yyyy_date_formats_dict = incomplete_mm_yyyy_date_formats_dict_collection[language]
-        self.incomplete_dd_mm_date_formats_dict = incomplete_dd_mm_date_formats_dict_collection[language]
+        self.occurences_per_sample_dict = occurences_per_sample_dict
+        self.date_text_gen_methods = OrderedDict([
+            ('DD/MM/YYYY',absolute_date_formats_dict_collection[language]),
+            ('DD/MM',incomplete_dd_mm_date_formats_dict_collection[language]),
+            ('MM/YYYY',incomplete_mm_yyyy_date_formats_dict_collection[language])
+        ])
 
         self.text_error_rate = text_noise_rate
         self.text_noise_methods = text_noise_methods
@@ -56,95 +81,46 @@ class DateTextGenerator():
 
     def generate_date_dataset(self):
         '''
-            Generates the dataset for all the formats declared for this class            
+            Generates the dataset for all the supported formats            
         '''
 
         date_range_df = pd.DataFrame(self.date_range,columns=['sample','pattern'])
-        
-        dataset = self._generate_absolute_date_dataset(
-            date_range=date_range_df.loc[date_range_df.pattern == 'DD/MM/YYYY']['sample'].to_list(),
-            target_format=date_range_df.loc[date_range_df.pattern == 'DD/MM/YYYY']['pattern'].to_list()
-            )
 
-        dataset = dataset.append(self._generate_relative_MM_YYYY_date_dataset(
-            date_range=date_range_df.loc[date_range_df.pattern == 'MM/YYYY']['sample'].to_list(),
-            target_format=date_range_df.loc[date_range_df.pattern == 'MM/YYYY']['pattern'].to_list()
-            ),ignore_index=True
-        )
+        returnable_dataset_list = [
+                self._generate_single_date_dataset(
+                date_range=date_range_df.loc[date_range_df.pattern == key]['sample'].to_list(),
+                target_format=date_range_df.loc[date_range_df.pattern == key]['pattern'].to_list(),
+                date_text_gen_methods=self.date_text_gen_methods[key],
+                samples_per_method=value) for key,value in self.occurences_per_sample_dict.items()]
 
-        dataset = dataset.append(self._generate_relative_DD_MM_date_dataset(
-            date_range=date_range_df.loc[date_range_df.pattern == 'DD/MM']['sample'].to_list(),
-            target_format=date_range_df.loc[date_range_df.pattern == 'DD/MM']['pattern'].to_list()
-            ),ignore_index=True
-        )
+        return pd.concat(returnable_dataset_list,ignore_index=True)
 
-
-        return dataset
-
-    def _generate_absolute_date_dataset(self,date_range,target_format):
+    def _generate_single_date_dataset(self,date_range,target_format,
+        date_text_gen_methods,samples_per_method=1):
         '''
-            Generates absolute date dataset for a given date_range
+           Generates a pandas dataset for a given date_range, target format and its date
+           text generation methods. With the samples_per_method variable is possible to
+           increase the amount of date text formats per target.
         '''
 
         X = []
         method_ids = []
         noise_types = [] # N/A if has no noise, or the keys from text_noise_implementations
+        y = []
 
         for sample in date_range:
             
             # Sampling method and its ids
-            method_id,date_text_gen_method = self.sample_from_dict(self.absolute_date_text_gen_methods)[0]
+            for method_id,date_text_gen_method in self.sample_from_dict(date_text_gen_methods,
+                samples_per_method):
 
-            day,month,year = sample.split('/')
-            
-            method_ids.append(
-                int(method_id)
-            )
-
-            text_sample = date_text_gen_method(day,month,year)
-
-            noise_type = 'N/A'
-
-            if random() < self.text_error_rate:
-                # Applying noise
-                text_sample,noise_type = self._apply_noise(text_sample)
-            
-            noise_types.append(
-                noise_type    
-            )
-
-            X.append(
-                text_sample
-            )
-
-        dataset = pd.DataFrame(list(zip(method_ids,noise_types,X,date_range,target_format)),
-            columns=['Input Pattern','Noise Type','Input','Target','Target Format'])
-
-        return dataset
-
-    def _generate_relative_DD_MM_date_dataset(self,date_range,target_format):
-        '''
-            Generates relative date dataset for a given date_range
-            with DD/MM.
-        '''
-
-        X = []
-        method_ids = []
-        noise_types = [] # N/A if has no noise, or the keys from text_noise_implementations
-        Y = []
-
-        for sample in date_range:
-            
-            # Sampling method and its ids
-            for method_id,date_text_gen_method in self.sample_from_dict(self.incomplete_dd_mm_date_formats_dict,2):
-
-                month,year = sample.split('/')
+                day,month,year = self.parse_days_months_years(sample,target_format[0])
                 
                 method_ids.append(
                     int(method_id)
                 )
 
-                text_sample = date_text_gen_method(month,year)
+                text_sample = date_text_gen_method(day,month,year)
 
                 noise_type = 'N/A'
 
@@ -160,54 +136,9 @@ class DateTextGenerator():
                     text_sample
                 )
 
-                Y.append(
-                    sample
-                )
-        
-        print(len(X),len(2*target_format))
-        dataset = pd.DataFrame(list(zip(method_ids,noise_types,X,Y,2*target_format)),
-            columns=['Input Pattern','Noise Type','Input','Target','Target Format'])
+                y.append(sample)
 
-        return dataset
-
-    def _generate_relative_MM_YYYY_date_dataset(self,date_range,target_format):
-        '''
-            Generates relative date dataset for a given date_range
-            with MM/YYYY.
-        '''
-
-        X = []
-        method_ids = []
-        noise_types = [] # N/A if has no noise, or the keys from text_noise_implementations
-
-        for sample in date_range:
-            
-            # Sampling method and its ids
-            method_id,date_text_gen_method = self.sample_from_dict(self.incomplete_mm_yyyy_date_formats_dict,3)[0]
-
-            month,year = sample.split('/')
-            
-            method_ids.append(
-                int(method_id)
-            )
-
-            text_sample = date_text_gen_method(month,year)
-
-            noise_type = 'N/A'
-
-            if random() < self.text_error_rate:
-                # Applying noise
-                text_sample,noise_type = self._apply_noise(text_sample)
-            
-            noise_types.append(
-                noise_type    
-            )
-
-            X.append(
-                text_sample
-            )
-
-        dataset = pd.DataFrame(list(zip(method_ids,noise_types,X,date_range,target_format)),
+        dataset = pd.DataFrame(list(zip(method_ids,noise_types,X,y,samples_per_method*target_format)),
             columns=['Input Pattern','Noise Type','Input','Target','Target Format'])
 
         return dataset
@@ -262,6 +193,22 @@ class DateTextGenerator():
 
 
         return input_text,applied_noises
+
+    @staticmethod
+    def parse_days_months_years(sample,sample_format):
+        if sample_format == 'DD/MM/YYYY':
+            day,month,year = sample.split('/')
+        elif sample_format == 'DD/MM':
+            day,month = sample.split('/')
+            year = None
+        elif sample_format == 'MM/YYYY':
+            day = None
+            month,year =sample.split('/')
+        else:
+            raise NotImplementedError(f'\
+                Format {sample_format} not implemented :(')
+
+        return day,month,year 
 
     @staticmethod
     def sample_from_dict(dict_to_sample,n_samples=1):
