@@ -7,459 +7,459 @@
 '''
 
 from num2words import num2words
-from .aux_dicts import extensive_months_dict
-from .aux_dicts import shortened_months_dict
+from .pt_aux_dicts import extensive_months_dict
+from .pt_aux_dicts import shortened_months_dict
 
-def all_extensive_numbers(month,year):
+def all_extensive_numbers(day,month,year):
     '''
         Todos os dias em notação por extenso:
         E.g.:
         - um do um de dois mil
     '''
-    input_month = num2words(int(month),lang='en')
-    input_year = num2words(int(year),lang='en')
-    return f'{input_month} of {input_year}'
+    input_day = num2words(int(day),lang='pt_BR')
+    input_month = num2words(int(month),lang='pt_BR')
 
-def dot_as_sep(month,year):
+    return f'{input_day} do {input_month}'
+
+def dot_as_sep(day,month,year):
     '''
         Alterando o separador
         para um ponto ao invés do / 
     '''
-    return f'{month}.{year}'
+    return f'{day}.{month}'
 
-def text_fullmonth_text(month,year):
+def text_fullmonth_text(day,month,year):
     '''
         Dia e ano escritos por extenso e mês
         escrito como o mês por extenso.
     '''
+    input_day = num2words(int(day),lang='pt_BR')
     input_month = extensive_months_dict[month]
-    input_year = num2words(int(year),lang='en')
-    return f'{input_month} of {input_year}'
 
-def text_shortmonth_text(month,year):
+    return f'{input_day} de {input_month}'
+
+def text_shortmonth_text(day,month,year):
     '''
         Dia e ano escritos por extenso e mês
         escrito como o mês abreviado.
     '''
+    
+    input_day = num2words(int(day),lang='pt_BR')
     input_month = shortened_months_dict[month]
-    input_year = num2words(int(year),lang='en')
-    return f'{input_month} of {input_year}'
 
-def format1(month,year):
+    return f'{input_day} de {input_month}'
+
+def format1(day,month,year):
     '''
         Date format 1 described as:
         "vinte e oito de abril de 2005" for the date 28/04/2005
     '''
-    input_month = extensive_months_dict[month]
-    input_year = year
-    return f'{input_month} of {input_year}'
 
-def format2(month,year):
+    input_day = num2words(int(day),lang='pt_BR')
+    input_month = extensive_months_dict[month]
+    return f'{input_day} de {input_month}'
+
+def format2(day,month,year):
     '''
         Date format 2 described as:
         "vinte e oito de abr de dois mil e cinco" for the date 28/04/2005
     '''
+    input_day = num2words(int(day),lang='pt_BR')
     input_month = shortened_months_dict[month]
-    input_year = num2words(int(year),lang='en')
-    return f'{input_month} of {input_year}'
+    return f'{input_day} de {input_month}'
 
-def format3(month,year):
+def format3(day,month,year):
     '''
         Date format 3 described as:
         "vinte e oito de abril de dois mil e cinco" for the date 28/04/2005
     '''
+    input_day = num2words(int(day),lang='pt_BR')
     input_month = extensive_months_dict[month]
-    input_year = num2words(int(year),lang='en')
-    return f'{input_month} of {input_year}'
+    return f'{input_day} de {input_month}'
 
-def format4(month,year):
+def format4(day,month,year):
     '''
         Date format 4 described as:
         "vigésimo oitavo dia do mês quatro de dois mil e cinco" for the date 28/04/2005
     '''
-    input_month = num2words(int(month),lang='en')
-    input_year = num2words(int(year),lang='en')
-    return f'month {input_month} of {input_year}'
+    input_day = num2words(int(day),to='ordinal',lang='pt_BR')
+    input_month = num2words(int(month),lang='pt_BR')
+    return f'{input_day} dia do mês {input_month}'
 
-def format5(month,year):
+def format5(day,month,year):
     '''
         Date format 5 described as:
         "28 de Abril de 2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = extensive_months_dict[month].capitalize()
-    input_year = year
-    return f'{input_month} of {input_year}'
+    return f'{input_day} de {input_month}'
 
-def format6(month,year):
+def format6(day,month,year):
     '''
         Date format 6 described as:
         "28 de abril de dois mil e cinco" for the date 28/04/2005
     '''
+    input_day = day
     input_month = extensive_months_dict[month]
-    input_year = num2words(int(year),lang='en')
-    return f'{input_month} of {input_year}'
+    return f'{input_day} de {input_month}'
 
-def format7(month,year):
+def format7(day,month,year):
     '''
         Date format 7 described as:
         "28-04 de dois mil e cinco" for the date 28/04/2005
     '''
+    input_day = day
     input_month = month
-    input_year = num2words(int(year),lang='en')
-    return f'{input_month} of {input_year}'
+    return f'{input_day}-{input_month}'
 
-def format8(month,year):
+def format8(day,month,year):
     '''
         Date format 8 described as:
         "vinte e oito - 04 - 2005" for the date 28/04/2005
     '''
-    input_month = month
-    input_year = year
-    return f'{input_month} - {input_year}'
 
-def format9(month,year):
+    input_day = num2words(int(day),lang='pt_BR')
+    input_month = month
+    return f'{input_day} - {input_month}'
+
+def format9(day,month,year):
     '''
         Date format 9 described as:
         "vinte e oito de abril - 2005" for the date 28/04/2005
     '''
+    input_day = num2words(int(day),lang='pt_BR')
     input_month = extensive_months_dict[month]
-    input_year = year
-    return f'{input_month} - {input_year}'
+    return f'{input_day} de {input_month}'
 
-def format10(month,year):
+def format10(day,month,year):
     '''
         Date format 10 described as:
-        "28th de abril de 2005" for the date 28/04/2005
+        "28º de abril de 2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = extensive_months_dict[month]
-    input_year = year
-    
-    return f'{input_month} of {input_year}'
+    return f'{input_day}º de {input_month}'
 
-def format11(month,year):
+def format11(day,month,year):
     '''
         Date format 11 described as:
-        "28th - 04 - 2005" for the date 28/04/2005
+        "28º - 04 - 2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = month
-    input_year = year
-    
-    return f'{input_month}-{input_year}'
+    return f'{input_day}º - {input_month}'
 
-def format12(month,year):
+def format12(day,month,year):
     '''
         Date format 12 described as:
-        "28th / 04 / 2005" for the date 28/04/2005
+        "28º / 04 / 2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = month
-    input_year = year
+    return f'{input_day}º / {input_month}'
 
-    return f'{input_month}/{input_year}'
-
-def format13(month,year):
+def format13(day,month,year):
     '''
         Date format 13 described as:
-        "28th / Abril / 2005" for the date 28/04/2005
+        "28º / Abril / 2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = extensive_months_dict[month].capitalize()
-    input_year = year
+    return f'{input_day}º / {input_month}'
 
-    return f'{input_month}/{input_year}'
-
-def format14(month,year):
+def format14(day,month,year):
     '''
         Date format 14 described as:
         "28 / abril / 2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = extensive_months_dict[month]
-    input_year = year
-    return f'{input_month}/{input_year}'
+    return f'{input_day} / {input_month}'
 
-def format15(month,year):
+def format15(day,month,year):
     '''
         Date format 15 described as:
         "vinte e oito abril dois mil e cinco" for the date 28/04/2005
     '''
+    input_day = num2words(int(day), lang='pt_BR')
     input_month = extensive_months_dict[month]
-    input_year = num2words(int(year),lang='en')
-    return f'{input_month} {input_year}'
+    return f'{input_day} {input_month}'
 
-def format16(month,year):
+def format16(day,month,year):
     '''
         Date format 16 described as:
         "28 abril dois mil e cinco" for the date 28/04/2005
     '''
+    input_day = day
     input_month = extensive_months_dict[month]
-    input_year = num2words(int(year),lang='en')
-    return f'{input_month} {input_year}'
+    return f'{input_day} {input_month}'
 
-def format17(month,year):
+def format17(day,month,year):
     '''
         Date format 17 described as:
         "28/04 dois mil e cinco" for the date 28/04/2005
     '''
+    input_day = day
     input_month = month
-    input_year = num2words(int(year),lang='en')
-    return f'{input_month} {input_year}'
+    return f'{input_day}/{input_month}'
 
-def format18(month,year):
+def format18(day,month,year):
     '''
         Date format 18 described as:
         "28.04 dois mil e cinco" for the date 28/04/2005
     '''
+    input_day = day
     input_month = month
-    input_year = num2words(int(year),lang='en')
-    return f'{input_month} {input_year}'
+    return f'{input_day}.{input_month}'
 
-
-def format19(month,year):
+def format19(day,month,year):
     '''
         Date format 19 described as:
         "28-04 dois mil e cinco" for the date 28/04/2005
     '''
+    input_day = day
     input_month = month
-    input_year = num2words(int(year),lang='en')
-    return f'{input_month} {input_year}'
+    return f'{input_day}-{input_month}'
 
-
-def format20(month,year):
+def format20(day,month,year):
     '''
         Date format 20 described as:
         "vinte e oito/abril/dois mil e cinco" for the date 28/04/2005
     '''
+    input_day = num2words(int(day),lang='pt_BR')
     input_month = extensive_months_dict[month]
-    input_year = num2words(int(year),lang='en')
-    return f'{input_month}/{input_year}'
+    return f'{input_day}/{input_month}'
 
-def format21(month,year):
+def format21(day,month,year):
     '''
         Date format 21 described as:
         "28 do mês quatro de 2005" for the date 28/04/2005
     '''
-    input_month = num2words(int(month),lang='en')
-    input_year = year
-    return f'month {input_month} of {input_year}'
+    input_day = day
+    input_month = num2words(int(month),lang='pt_BR')
+    return f'{input_day} do mês {input_month}'
 
-def format22(month,year):
+def format22(day,month,year):
     '''
         Date format 22 described as:
         "28-4-2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = int(month)
-    input_year = year
-    return f'{input_month}-{input_year}'
+    return f'{input_day}-{input_month}'
 
-def format23(month,year):
+def format23(day,month,year):
     '''
         Date format 23 described as:
         "28 - 4 - 2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = int(month)
-    input_year = year
-    return f'{input_month} - {input_year}'
+    return f'{input_day} - {input_month}'
 
-def format24(month,year):
+def format24(day,month,year):
     '''
         Date format 24 described as:
         "28-04-2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = month
-    input_year = year
-    return f'{input_month}-{input_year}'
+    return f'{input_day}-{input_month}'
 
-def format25(month,year):
+def format25(day,month,year):
     '''
         Date format 25 described as:
         "28 - 04 - 2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = month
-    input_year = year
-    return f'{input_month} - {input_year}'
+    return f'{input_day} - {input_month}'
 
-def format26(month,year):
+def format26(day,month,year):
     '''
         Date format 26 described as:
         "28-abril-2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = extensive_months_dict[month]
-    input_year = year
-    return f'{input_month}-{input_year}'
+    return f'{input_day}-{input_month}'
 
-def format27(month,year):
+def format27(day,month,year):
     '''
         Date format 27 described as:
         "28 - abril - 2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month =  extensive_months_dict[month]
-    input_year = year
-    return f'{input_month} - {input_year}'
+    return f'{input_day} - {input_month}'
 
-def format28(month,year):
+def format28(day,month,year):
     '''
         Date format 28 described as:
         "28-abr-2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month =  shortened_months_dict[month]
-    input_year = year
-    return f'{input_month}-{input_year}'
+    return f'{input_day}-{input_month}'
 
-def format29(month,year):
+def format29(day,month,year):
     '''
         Date format 29 described as:
         "28 - abr - 2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month =  shortened_months_dict[month]
-    input_year = year
-    return f'{input_month} - {input_year}'
+    return f'{input_day} - {input_month}'
 
-def format30(month,year):
+def format30(day,month,year):
     '''
         Date format 30 described as:
         "28.4.2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = int(month)
-    input_year = year
-    return f'{input_month}.{input_year}'
+    return f'{input_day}.{input_month}'
 
-def format31(month,year):
+def format31(day,month,year):
     '''
         Date format 31 described as:
         "28 . 4 . 2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = int(month)
-    input_year = year
-    return f'{input_month} . {input_year}'
+    return f'{input_day} . {input_month}'
 
-def format32(month,year):
+def format32(day,month,year):
     '''
         Date format 32 described as:
         "28.04.2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = month
-    input_year = year
-    return f'{input_month}.{input_year}'
+    return f'{input_day}.{input_month}'
 
-def format33(month,year):
+def format33(day,month,year):
     '''
         Date format 33 described as:
         "28 . 04 . 2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = month
-    input_year = year
-    return f'{input_month} . {input_year}'
+    return f'{input_day} . {input_month}'
 
-def format34(month,year):
+def format34(day,month,year):
     '''
         Date format 34 described as:
         "28.abril.2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = extensive_months_dict[month]
-    input_year = year
-    return f'{input_month}.{input_year}'
+    return f'{input_day}.{input_month}'
 
-def format35(month,year):
+def format35(day,month,year):
     '''
         Date format 35 described as:
         "28 . abril . 2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = extensive_months_dict[month]
-    input_year = year
-    return f'{input_month} . {input_year}'
+    return f'{input_day} . {input_month}'
 
-def format36(month,year):
+def format36(day,month,year):
     '''
         Date format 36 described as:
         "28.abr.2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = shortened_months_dict[month]
-    input_year = year
-    return f'{input_month}.{input_year}'
+    return f'{input_day}.{input_month}'
 
-def format37(month,year):
+def format37(day,month,year):
     '''
         Date format 37 described as:
         "28 . abr . 2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = shortened_months_dict[month]
-    input_year = year
-    return f'{input_month} . {input_year}'
+    return f'{input_day} . {input_month}'
 
-def format38(month,year):
+def format38(day,month,year):
     '''
         Date format 38 described as:
         "28/04/2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = month
-    input_year = year
-    return f'{input_month}/{input_year}'
+    return f'{input_day}/{input_month}'
 
-def format39(month,year):
+def format39(day,month,year):
     '''
         Date format 39 described as:
         "28 / 04 / 2005" for the date 28/04/2005
     '''
+    input_day = day
     input_month = month
-    input_year = year
-    return f'{input_month} / {input_year}'
+    return f'{input_day} / {input_month}'
 
-def format40(month,year):
+def format40(day,month,year):
     '''
         Date format 40 described as:
         "28 / abril / 2005" for the date 28/04/2005
     '''
+    input_day = int(day)
     input_month = extensive_months_dict[month]
-    input_year = int(year)
-    return f'{input_month}/{input_year}'
+    return f'{input_day}/{input_month}'
 
-def format41(month,year):
+def format41(day,month,year):
     '''
         Date format 41 described as:
         "28 / abril / 2005" for the date 28/04/2005
     '''
+    input_day = int(day)
     input_month = extensive_months_dict[month]
-    input_year = int(year)
-    return f'{input_month} / {input_year}'
+    return f'{input_day} / {input_month}'
 
-def format42(month,year):
+def format42(day,month,year):
     '''
         Date format 42 described as:
         "28/abr/2005" for the date 28/04/2005
     '''
+    input_day = int(day)
     input_month = shortened_months_dict[month]
-    input_year = int(year)
-    return f'{input_month}/{input_year}'
+    return f'{input_day}/{input_month}'
 
-def format43(month,year):
+def format43(day,month,year):
     '''
         Date format 43 described as:
         "28 / abr / 2005" for the date 28/04/2005
     '''
+    input_day = int(day)
     input_month = shortened_months_dict[month]
-    input_year = int(year)
-    return f'{input_month} / {input_year}'
+    return f'{input_day} / {input_month}'
 
-def format44(month,year):
+def format44(day,month,year):
     '''
         Date format 44 described as:
         "28/4/2005" for the date 28/04/2005
     '''
+    input_day = int(day)
     input_month = int(month)
-    input_year = int(year)
-    return f'{input_month}/{input_year}'
+    return f'{input_day}/{input_month}'
 
-def format45(month,year):
+def format45(day,month,year):
     '''
         Date format 45 described as:
         "28 / 4 / 2005" for the date 28/04/2005.
     '''
+    input_day = int(day)
     input_month = int(month)
-    input_year = int(year)
-    return f'{input_month} / {input_year}'
+    return f'{input_day} / {input_month}'
 
 '''
     Não se esqueça de incluir aqui as funções declaradas para gerar datas completas.
 '''
-mm_yyyy_date_formats_dict = {
+dd_mm_date_formats_dict = {
     '1':format1,
     '2':format2,
     '3':format3,

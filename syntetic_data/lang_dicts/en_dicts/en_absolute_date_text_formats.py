@@ -7,8 +7,8 @@
 '''
 
 from num2words import num2words
-from .aux_dicts import extensive_months_dict
-from .aux_dicts import shortened_months_dict
+from .en_aux_dicts import extensive_months_dict
+from .en_aux_dicts import shortened_months_dict
 
 def all_extensive_numbers(day,month,year):
     '''
@@ -535,7 +535,7 @@ def format45(day,month,year):
 '''
     Não se esqueça de incluir aqui as funções declaradas para gerar datas completas.
 '''
-date_formats_dict = {
+absolute_date_formats_dict = {
     '1':format1,
     '2':format2,
     '3':format3,

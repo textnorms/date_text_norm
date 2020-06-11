@@ -3,7 +3,7 @@
     como é o caso de erros de caracteres parecidos ou caracteres faltantes.
 '''
 
-from .aux_dicts import lookalike_chars
+from .noise_dicts import lookalike_chars
 from random import sample
 from collections import OrderedDict
 
