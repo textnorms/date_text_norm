@@ -3,3 +3,6 @@
 
 # Do not track CSV data
 *.csv
+
+# Ignore .diff files
+*.diff
