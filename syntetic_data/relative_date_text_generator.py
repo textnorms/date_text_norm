@@ -55,6 +55,7 @@ class RelativeDateTextGenerator(DateTextGenerator):
         max_noise_types_per_sample=3,
         max_noise_occurences_per_sample = 2,
         text_noise_methods=text_noise_dict,
+        samples_per_method=1,
         language='en'):
 
         self.n_samples = n_samples
@@ -69,6 +70,8 @@ class RelativeDateTextGenerator(DateTextGenerator):
         self.max_noise_occurences_per_sample = max_noise_occurences_per_sample
         self.max_noise_types_per_sample = max_noise_types_per_sample
 
+        self.samples_per_method = samples_per_method
+
     def generate_date_dataset(self):
         '''
             Generates the dataset for all the supported formats            
@@ -77,12 +80,13 @@ class RelativeDateTextGenerator(DateTextGenerator):
         returnable_dataset_list = [
                 self._generate_single_date_dataset(
                 sample_range=range(self.n_samples),
-                date_text_gen_methods=self.date_text_gen_methods['Relative'])]
+                date_text_gen_methods=self.date_text_gen_methods['Relative'],
+                samples_per_method=self.samples_per_method)]
 
         return pd.concat(returnable_dataset_list,ignore_index=True)
 
     def _generate_single_date_dataset(self,sample_range,
-        date_text_gen_methods,samples_per_method=1):
+        date_text_gen_methods,samples_per_method):
         '''
            Generates a pandas dataset for a given date_range, target format and its date
            text generation methods. With the samples_per_method variable is possible to
