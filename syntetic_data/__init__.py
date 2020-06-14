@@ -4,3 +4,4 @@
 '''
 
 from .date_text_generator import DateTextGenerator
+from .relative_date_text_generator import RelativeDateTextGenerator
