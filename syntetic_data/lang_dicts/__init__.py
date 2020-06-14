@@ -25,7 +25,9 @@ from .pt_dicts.pt_absolute_date_text_formats import absolute_date_formats_dict \
 from .pt_dicts.pt_incomplete_dd_mm_text_formats import dd_mm_date_formats_dict \
     as pt_dd_mm_date_formats_dict
 from .pt_dicts.pt_incomplete_mm_yyyy_text_formats import mm_yyyy_date_formats_dict \
-    as pt_mm_yyyy_date_formats_dict    
+    as pt_mm_yyyy_date_formats_dict
+from .pt_dicts.pt_relative_date_text_formats import relative_date_formats_dict \
+    as pt_relative_date_text_formats
 
 '''
     Absolute dates dicts
@@ -57,5 +59,6 @@ incomplete_dd_mm_date_formats_dict_collection = OrderedDict([
     Relaative dates dicts
 '''
 relative_date_formats_dict_collection = OrderedDict([
-    ('en',en_relative_date_text_formats)
+    ('en',en_relative_date_text_formats),
+    ('pt',pt_relative_date_text_formats)
 ])
