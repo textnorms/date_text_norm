@@ -79,7 +79,7 @@ class RelativeDateTextGenerator(DateTextGenerator):
 
         returnable_dataset_list = [
                 self._generate_single_date_dataset(
-                sample_range=range(self.n_samples),
+                sample_range=range(1,self.n_samples+1),
                 date_text_gen_methods=self.date_text_gen_methods['Relative'],
                 samples_per_method=self.samples_per_method)]
 
