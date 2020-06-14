@@ -83,6 +83,8 @@ def unexpected_space_noise(input_text,K):
     K_count = 0
     new_text = input_text
     
+    failure_counter = 0
+
     while(K_count<K):
         # Obtaining the split point for the string
         split_point = sample(range(len(new_text)),1)[0]
@@ -90,6 +92,17 @@ def unexpected_space_noise(input_text,K):
         # Skipping operation the if value is a ' ' or is the beggining or the end of seq
         if new_text[split_point] == ' ' or split_point==0 or split_point == len(text_noise_dict):
             
+            failure_counter += 1
+
+            if failure_counter>=100:
+                '''
+                    If this verification has failed more than one hundred times, it increments
+                    the counter anyway. This prevents the infinite loop it could happen for
+                    some date text formats.
+                '''
+                K_count += 1
+                failure_counter=0
+
             continue
         
         # Spliting list to insert noise data
