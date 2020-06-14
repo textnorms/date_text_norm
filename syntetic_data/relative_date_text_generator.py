@@ -126,7 +126,7 @@ class RelativeDateTextGenerator(DateTextGenerator):
 
                 y.append(target) 
 
-        dataset = pd.DataFrame(list(zip(method_ids,noise_types,X,y,len(X)*['Relative '])),
+        dataset = pd.DataFrame(list(zip(method_ids,noise_types,X,y,len(X)*['Relative'])),
             columns=['Input Pattern','Noise Type','Input','Target','Target Format'])
 
         return dataset
