@@ -143,7 +143,7 @@ class DateTextGenerator():
 
         return dataset
 
-    def generate_demo(self,date='01/01/2020'):
+    def generate_demo(self,date='01/01/2020',date_type='DD/MM/YYYY'):
         '''
             Generates a demo for all the text forms
             contained in the model for a given date.
@@ -151,15 +151,15 @@ class DateTextGenerator():
         methods = []
         generated_texts = []
 
-        day,month, year = date.split('/')
+        day,month, year = self.parse_days_months_years(date,date_type)
 
-        for method_id,date_text_gen_method in self.absolute_date_text_gen_methods.items():
+        for method_id,date_text_gen_method in self.date_text_gen_methods[date_type].items():
         
             methods.append(method_id)
             generated_texts.append(date_text_gen_method(day,month,year))
 
 
-        dataset = pd.DataFrame(list(zip(methods,generated_texts,[date]*len(self.absolute_date_text_gen_methods))),
+        dataset = pd.DataFrame(list(zip(methods,generated_texts,[date]*len(self.date_text_gen_methods[date_type]))),
             columns=['Input Pattern','Generated Text','Origin Sample'])
 
         return dataset
