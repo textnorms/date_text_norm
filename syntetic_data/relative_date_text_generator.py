@@ -131,23 +131,23 @@ class RelativeDateTextGenerator(DateTextGenerator):
 
         return dataset
 
-    def generate_demo(self,sample=13):
+    def generate_demo(self,n=13):
         '''
             Generates a demo for all the text forms
-            contained in the model for a given date.
+            contained in the model for a given number n.
         '''        
         methods = []
         generated_texts = []
+        targets = []
 
-        day,month, year = date.split('/')
-
-        for method_id,date_text_gen_method in self.absolute_date_text_gen_methods.items():
+        for method_id,date_text_gen_method in self.date_text_gen_methods['Relative'].items():
         
             methods.append(method_id)
-            generated_texts.append(date_text_gen_method(day,month,year))
+            sample,target = date_text_gen_method(n)
+            generated_texts.append(sample)
+            targets.append(target)
 
-
-        dataset = pd.DataFrame(list(zip(methods,generated_texts,[date]*len(self.absolute_date_text_gen_methods))),
+        dataset = pd.DataFrame(list(zip(methods,generated_texts,targets)),
             columns=['Input Pattern','Generated Text','Origin Sample'])
 
         return dataset
